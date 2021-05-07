@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link href="{% static 'css/chat.css' %}" rel="stylesheet">
+{% endblock head %}
+{% block content %}
+
+
+    <div class="container-fluid my-3">
+
+        <div class="row rounded-lg overflow-hidden shadow ">
+          <!-- Users box-->
+          <div class="col-3 mx-auto">
+            <div class="bg-white">
+      
+              <div class="messages-box">
+                <div class="list-group my-2 rounded-0">
+      
+                  {% for p in persons %}
+                    {% if not p == me %}
+                      <a href="{% url 'common:chat' p.username %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                        {% if p.employee.profile_image %}
+                        <div class="media"><img src="{{ p.employee.profile_image.url }}" alt="user" height="50px" width="50px" class="rounded-circle d-none d-lg-block">
+                        {% else %}
+                        <div class="media"><img src="{% static 'images/default-avatar.png' %}" alt="user" height="50px" width="50px" class="rounded-circle d-none d-lg-block">
+                        {% endif %}
+                          <div class="media-body ml-4">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                              <h6 class="mb-0 d-none d-lg-block">{{ p.first_name }} {{ p.last_name }}</h6><small class="m-0 p-0 small font-weight-bold">@{{ p.username }}</small>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Chat Box-->
+          <div class="col-9 px-0">
+            <div class="row px-4 h-100 py-5 mx-auto chat-box bg-white ">
+              <div class="col text-center justify-content-center align-self-center ">
+                <div class="mx-auto">Здесь будет выводиться история сообщений.</div>
+              </div>
+      
+            </div>
+      
+      
+          </div>
+        </div>
+    </div>
+
+{% endblock content %}

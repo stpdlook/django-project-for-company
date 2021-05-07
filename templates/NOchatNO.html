@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+<!-- ####################################################### -->
+{% load static %}
+<!-- ####################################################### -->
+{% block head %}
+<link href="{% static 'css/chat.css' %}" rel="stylesheet">
+{% endblock head %}
+<!-- ####################################################### -->
+{% block content %}
+<div class="container-fluid my-3">
+
+  <div class="row rounded-lg overflow-hidden shadow">
+    <!-- Users box-->
+    <div class="col-2 mx-auto">
+      <div class="bg-white">
+
+        <div class="bg-gray px-4 py-2 bg-light">
+          <p class="h5 mb-0 py-1">Диалоги</p>
+        </div>
+
+        <div class="messages-box">
+          <div class="list-group rounded-0">
+
+            {% for message in messages %}
+            <a href="#" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+              {% if message.user.employee.profile_image %}
+              <div class="media"><img src="{{ message.user.employee.profile_image.url }}" alt="user" width="50" class="rounded-circle">
+              {% else %}
+              <div class="media"><img src="{% static 'images/default-avatar.png' %}" alt="user" width="50" class="rounded-circle">
+              {% endif %}
+                <div class="media-body ml-4">
+                  <div class="d-flex align-items-center justify-content-between mb-1">
+                    <h6 class="mb-0">{{ message.user.first_name }} {{ message.user.last_name }}</h6><small class="small font-weight-bold">@{{ message.user.username }}</small>
+                  </div>
+                  <p class="font-italic mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Chat Box-->
+    <div class="col-10 px-0">
+      <div class="px-4 py-5 chat-box bg-white">
+        <!-- Sender Message-->
+        <div class="media w-50 mb-3"><img src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg" alt="user" width="50" class="rounded-circle">
+          <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-muted">Test which is a new approach all solutions</p>
+            </div>
+            <p class="small text-muted">12:00 PM | Aug 13</p>
+          </div>
+        </div>
+
+        <!-- Reciever Message-->
+        <div class="media w-50 ml-auto mb-3">
+          <div class="media-body">
+            <div class="bg-primary rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-white">Test which is a new approach to have all solutions</p>
+            </div>
+            <p class="small text-muted">12:00 PM | Aug 13</p>
+          </div>
+        </div>
+
+        <!-- Sender Message-->
+        <div class="media w-50 mb-3"><img src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg" alt="user" width="50" class="rounded-circle">
+          <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-muted">Test, which is a new approach to have</p>
+            </div>
+            <p class="small text-muted">12:00 PM | Aug 13</p>
+          </div>
+        </div>
+
+        <!-- Reciever Message-->
+        <div class="media w-50 ml-auto mb-3">
+          <div class="media-body">
+            <div class="bg-primary rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-white">Apollo University, Delhi, India Test</p>
+            </div>
+            <p class="small text-muted">12:00 PM | Aug 13</p>
+          </div>
+        </div>
+
+        <!-- Sender Message-->
+        <div class="media w-50 mb-3"><img src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg" alt="user" width="50" class="rounded-circle">
+          <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-muted">Test, which is a new approach</p>
+            </div>
+            <p class="small text-muted">12:00 PM | Aug 13</p>
+          </div>
+        </div>
+
+        <!-- Reciever Message-->
+        <div class="media w-50 ml-auto mb-3">
+          <div class="media-body">
+            <div class="bg-primary rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-white">Apollo University, Delhi, India Test</p>
+            </div>
+            <p class="small text-muted">12:00 PM | Aug 13</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Typing area -->
+      <form action="#" class="bg-light">
+        <div class="input-group">
+          <input type="text" placeholder="Напишите сообщение..." aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+          <div class="input-group-append">
+            <button id="button-addon2 btn-send" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+          
+</div>
+
+{% endblock content %}
+
+
+
+
+{% for m in message %}
+            {% if m.sender == me %}
+              <!-- Reciever Message-->
+              <div class="media w-50 ml-auto mb-3">
+                <div class="media-body">
+                  <div id="" class="bg-primary rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-white">{{ m.text }}</p>
+                  </div>
+                  <p class="small text-muted">{{ m.timestamp }}</p>
+                </div>
+              </div>
+            {% else %}
+              <!-- Sender Message-->
+                {% if m.sender.employee.profile_image %}
+                    <div class="media w-50 mb-3"><img src="{{ m.sender.employee.profile_image.url }}" alt="user" height="50px" width="50px" class="rounded-circle">
+                {% else %}
+                    <div class="media"><img src="{% static 'images/default-avatar.png' %}" alt="user" height="50px" width="50px" class="rounded-circle d-none d-lg-block">
+              {% endif %}
+                <div class="media-body ml-3">
+                  <div class="bg-light rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-muted">{{ m.text }}</p>
+                  </div>
+                  <p class="small text-muted">{{ m.timestamp }}</p>
+                </div>
+              </div>
+            {% endif %}
+              
+            {% endfor %}

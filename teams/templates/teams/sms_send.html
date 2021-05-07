@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <style>
+        .requiredField {
+          font-weight: bold;
+          color: #363636;
+        }
+        .asteriskField {
+          display: none;
+        }
+      </style>
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <div class="row">
+            <div class="col-lg-12 align-self-center">
+              <h3 class="mt-3 mb-0 text-primary text-center">{{ companie }}</h3>
+              <div class="mb-0">
+                
+              </div>
+              <div class="p-5">
+              <form action="" autocomplete="off" method="POST">
+                  {% csrf_token %}
+                  {{ form | crispy }}
+                  <p class="m-0">Текущий баланс счета: {{ balance }} рублей</p>
+                <button type="submit" class="mt-0 btn btn-info float-right"><i class="fa fa-paper-plane"></i> Отправить</button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+{% endblock content %}

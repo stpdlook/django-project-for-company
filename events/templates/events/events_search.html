@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow mb-4">
+        <div class=" card-header mb-2 d-sm-flex align-items-center justify-content-between">
+          <h4 class="m-0 font-weight-bold text-primary">Задачи</h4>
+          <div>
+            <a href="{% url 'events:event-list' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-th text-white-50"></i> Показать все задачи</a>
+          </div>
+        </div>
+
+  
+  <div class="row">
+  {% for event in events %}
+
+  <div class="col-lg-6 bg-info my-2 d-lg-none d-table-cell text-center">
+    <div class="p-2">
+      <a href="{% url 'events:event-detail' event.pk %}" class="btn rounded "><p class="m-0 text-white text-lg">{{ event.name }}</p></a>
+    </div>
+  </div>
+
+  <div class="col-5 mx-auto text-lg d-none d-lg-block">
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      {% if event.description %}
+      <div class="bg-gradient-success card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      {% else %}
+      <div class="bg-info card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      {% endif %}
+        <a class="text-decoration-none" href="{% url 'events:event-detail' event.slug %}"><h5 class="m-0 font-weight-bold text-white">{{ event.name }}</h5></a>
+        <div class="dropdown no-arrow d-none d-md-block">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-header">Настройки:</div>
+              <a class="dropdown-item" href="{% url 'events:event-update' event.slug %}">Изменить</a>
+              <a class="dropdown-item" href="{% url 'events:event-delete' event.slug %}">Удалить</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card Body -->
+      <div class="card-body ">
+        <div class="row">
+          <div class="col-lg-6 ">
+            <p><h5 class="m-0 font-weight-bold">Тип:</h5> {{ event.event_type }}</p>
+            <p><h5 class="m-0 font-weight-bold">Статус:</h5> {{ event.status }}</p>
+            {% if event.responsible %}
+            <p><h5 class="m-0 font-weight-bold">Ответственный:</h5> {{ event.responsible }}</p>
+            {% else %}
+            <p><h5 class="m-0 font-weight-bold">Ответственный:</h5> Не выбрано</p>
+            {% endif %}
+          </div>
+          <div class="col-lg-6 ">
+            <p><h5 class="m-0 font-weight-bold">Дата начала:</h5> {{ event.start_date }}</p>
+            <p><h5 class="m-0 font-weight-bold">Дата окончания:</h5> {{ event.end_date }}</p>
+            {% if event.created_by %}
+            <p><h5 class="m-0 font-weight-bold">Создал:</h5> {{ event.created_by }} ({{ event.created_by.first_name }} {{ event.created_by.last_name }})</p>
+            {% else %}
+            <p><h5 class="m-0 font-weight-bold">Создал:</h5> Пользователь удален</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+  </div>
+  {% include "paginator.html" %} 
+</div>
+
+
+{% endblock content %}

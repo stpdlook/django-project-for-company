@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+      <h1 class="h3 mb-0 text-gray-800">Сотрудники</h1>
+    </div>          
+
+    <!-- Main Content Here -->
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 text-lg font-weight-bold text-primary">Список сотрудников</h6>
+        <a href="{% url 'teams:employee-export-xls' %}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Отчет в Excel</a>
+      </div>
+
+      
+        
+     
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Должность</th>
+                <th>Дата рождения</th>
+                <th>Телефон</th>
+                <th>Имя пользователя</th>
+                <th>Email</th>
+                {% if user.is_superuser %}
+                  <th>Управление</th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody>
+            {% for employee in object_list %}
+                <tr>
+                    <td class="align-middle">{{ employee.user.last_name }}</td>
+                    <td class="align-middle">{{ employee.user.first_name }}</td>
+
+                    {% if employee.position %}
+                    <td class="align-middle">{{ employee.position }}</td>
+                    {% else %}
+                    <td class="text-danger align-middle">Не указано</td>
+                    {% endif %}
+
+                    {% if employee.birth_date %}
+                    <td class="align-middle">{{ employee.birth_date }}</td>
+                    {% else %}
+                    <td class="text-danger align-middle">Не указано</td>
+                    {% endif %}
+
+                    {% if employee.phone_number %}
+                    <td class="align-middle">{{ employee.phone_number }}</td>
+                    {% else %}
+                    <td class="text-danger align-middle">Не указано</td>
+                    {% endif %}
+
+                    <td class="align-middle">{{ employee.user.username }}</td>
+
+                    {% if employee.user.email %}
+                    <td class="align-middle"><a class="text-decoration-none" title='Написать сообщение' href="{% url 'teams:employee-email' employee.pk %}">{{ employee.user.email }}</a></td>
+                    {% else %}
+                    <td class="text-danger align-middle">Не указано</td>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                    <td class="align-middle"><a class="btn btn-block btn-sm btn-info my-1" href="{% url 'teams:employee-update' employee.pk %}">Изменить</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+  <!-- /.container-fluid -->
+
+{% include "paginator.html" %} 
+
+{% endblock content %}

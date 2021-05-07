@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+      <h1 class="h3 mb-0 text-gray-800">Контакты</h1>
+      <a href="{% url 'teams:contact-create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Добавить</a>
+    </div>          
+
+
+    <!-- Topbar Search -->
+  <form action="{% url 'teams:contact-search' %}" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    <div class="input-group my-2">
+      <input type="text" class="form-control bg-light border-0 small" placeholder="Поиск по фамилии" name="last_name" aria-label="Search" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">
+          <i class="fas fa-search fa-sm"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+
+
+    <!-- Main Content Here -->
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 text-lg font-weight-bold text-primary">Список контактов</h6>
+      </div>
+
+      
+        
+     
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class=" text-center table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                <th>Дата рождения</th>
+                <th>Должность</th>
+                <th>Телефон</th>
+                <th>Email</th>
+                <th>Компания</th>
+                <th>Изменить</th>
+              </tr>
+            </thead>
+            <tbody class="">
+            {% for contact in contacts %}
+              <tr>
+                <td class="align-middle">{{ contact.last_name }}</td>
+                <td class="align-middle">{{ contact.first_name }}</td>
+
+                {% if contact.patronymic %}
+                <td class="align-middle">{{ contact.patronymic }}</td>
+                {% else %}
+                <td class="text-danger align-middle">Не указано</td>
+                {% endif %}
+
+                {% if contact.birth_date %}
+                <td class="align-middle">{{ contact.birth_date }}</td>
+                {% else %}
+                <td class="text-danger align-middle">Не указано</td>
+                {% endif %}
+
+                {% if contact.position %}
+                <td class="align-middle">{{ contact.position }}</td>
+                {% else %}
+                <td class="text-danger align-middle">Не указано</td>
+                {% endif %}
+
+                {% if contact.phone_number %}
+                <td class="align-middle">{{ contact.phone_number }}</td>
+                {% else %}
+                <td class="text-danger align-middle">Не указано</td>
+                {% endif %}
+
+                {% if contact.email %}
+                <td class="align-middle"><a class="text-decoration-none" title='Написать сообщение' href="{% url 'teams:contact-email' contact.pk %}">{{ contact.email }}</a></td>
+                {% else %}
+                <td class="text-danger align-middle">Не указано</td>
+                {% endif %}
+
+                {% if contact.company %}
+                <td class="align-middle">{{ contact.company }}</td>
+                {% else %}
+                <td class="text-danger align-middle">Не указано</td>
+                {% endif %}
+
+                <td><a class="btn btn-block btn-sm btn-info my-1" href="{% url 'teams:contact-update' contact.pk %}">Изменить</a><hr class="sidebar-divider my-0"><a class="my-1 btn-block btn btn-sm btn-danger" href="{% url 'teams:contact-delete' contact.pk %}">Удалить</a></td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+  <!-- /.container-fluid -->
+
+  {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div class="nav-links mx-auto">
+          
+          {% if page_obj.has_previous %}
+              <a href="?{{ last_name }}page={{ page_obj.previous_page_number }}" class="btn btn-circle btn-light page-numbers"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+          {% endif %}
+
+          {% for p in page_obj.paginator.page_range %}
+              {% if page_obj.number == p %}
+                <span class="page-numbers current btn-circle btn-success">{{ p }}</span>
+              {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}
+                <a href="?{{ last_name }}page={{ p }}" class="btn-circle btn-secondary page-numbers">{{ p }}</a>
+              {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+              <a href="?{{ last_name }}page={{ page_obj.next_page_number }}" class="btn btn-circle btn-light page-numbers"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+          {% endif %}
+
+        </div>
+    </div>
+  {% endif %}
+
+{% endblock content %}

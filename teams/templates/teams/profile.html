@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %} 
+
+{% block content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800">Профиль</h1>
+        </div>          
+
+        <!-- Main Content Here -->
+        <div class="row">
+          <div class="col-lg-2"></div>
+          <div class="d-none d-lg-block col-lg-3 my-5">
+            {% if user.employee.profile_image %}
+            <img src="{{ user.employee.profile_image.url }}" class="rounded float-right my-2" height="300px" width="300px">
+            {% else %}
+            <div class="media"><img src="{% static 'images/default-avatar.png' %}" alt="user" width="50" class="rounded-circle">
+            {% endif %}
+          </div>
+          <div class="card o-hidden border-0 shadow-lg my-5 col-lg-5">
+            <div class="card-body">
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                <p><strong>Имя пользователя: </strong> {{ user.username }} </p>
+                <p><strong>Email: </strong> {{ user.email }} </p>
+                <p><strong>Должность: </strong> {{ user.employee.position }} </p>
+                <p><strong>Телефон: </strong> {{ user.employee.phone_number }} </p>
+                <p><strong>Дата рождения: </strong> {{ user.employee.birth_date }} </p>
+                <a href="{% url 'teams:profile-update' %}" class="btn btn-info shadow-sm">Изменить</a>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+    </div>
+    <!-- /.container-fluid -->
+{% endblock content %}

@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'css/chat.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block content %}
+
+    <!-- <h3>You: {{ me.username }}</h3>
+    <h3>Thread: {{ recipient.username }}</h3>
+    <ul id="message-list">
+        {% for m in message %}
+        <li>[{{ m.sender.username }}]: {{ m.text }}</li>
+        {% endfor %}
+    </ul>
+    <form id="message-form">
+        {% csrf_token %}
+        <input type="text" name="message" id="message" required>
+        <input type="submit" value="Send" class="btn">
+    </form> -->
+
+    <div class="container-fluid my-3">
+
+        <div class="row rounded-lg overflow-hidden shadow ">
+          <!-- Users box-->
+          <div class="col-3 mx-auto">
+            <div class="bg-white h-100">
+      
+              <div class="messages-box">
+                <div class="list-group my-2 rounded-0">
+                  <p class="text-center">Ваше имя пользователя: <strong>{{ me }}</strong></p>
+      
+                  {% for p in persons %}
+                    {% if not p == me %}
+                      <a href="{% url 'common:chat' p.username %}" class="{% if p.username == recipient.username %} list-group-item list-group-item-action active text-white rounded-0 {% else %} list-group-item list-group-item-action list-group-item-light rounded-0 {% endif %}">
+                        {% if p.employee.profile_image %}
+                        <div class="media"><img src="{{ p.employee.profile_image.url }}" alt="user" height="50px" width="50px" class="rounded-circle d-none d-lg-block">
+                        {% else %}
+                        <div class="media"><img src="{% static 'images/default-avatar.png' %}" alt="user" height="50px" width="50px" class="rounded-circle d-none d-lg-block">
+                        {% endif %}
+                          <div class=" ml-4">
+                            <div class=" align-items-center mb-1">
+                              <small class="m-0 p-0 small font-weight-bold ">@{{ p.username }}</small>
+                              <h6 class="mb-0 d-none d-lg-block">{{ p.first_name }} {{ p.last_name }}</h6>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Chat Box-->
+          <div class="col-9 px-0">
+            <div id="message-list" class="px-4 chat-box">
+                <ul class="list-unstyled p-1 mb-3" id="message-feed">
+                    {% for m in message %}
+                    <li class="">[{{ m.timestamp|date:'d/m/Y H:i' }} <b>@{{ m.sender.username }}</b>]: {{ m.text }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+
+      
+            <!-- Typing area -->
+            <form autocomplete="off" id="message-form">
+                {% csrf_token %}
+              <div class="input-group">
+                <div class="view overlay zoom align-bottom input-group-append">
+                  <a id="button-addon2" class="align-bottom btn emoji"> <i class="align-bottom fa fa-smile"></i></a>
+                </div>
+                <input type="text" placeholder="Напишите сообщение..." aria-describedby="button-addon2" name="message" id="message" class="form-control rounded-0 border-0 py-4 bg-light">
+                <div class="input-group-append">
+                  <button id="button-addon2 btn-send" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+                </div>
+              </div>
+            </form>
+      
+      
+          </div>
+        </div>
+    </div>
+    
+
+
+
+{% endblock content %}
+
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
+<script>
+    const url = 'ws://' + window.location.host + '/ws' + window.location.pathname;
+    const ws = new WebSocket(url);
+
+    function scrollToBottom() {
+        let objDiv = document.getElementById("message-list");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+
+    scrollToBottom();
+
+    ws.onopen = function(event) {
+        console.log('Connection is open');
+        // ws.send("Thanks for connecting");
+    };
+
+    var emojiBtn = document.querySelector('.emoji');
+    var mInput = document.getElementById('message');
+    var picker = new EmojiButton({
+      position: 'auto'
+    })
+    picker.on('emoji', function(emoji){
+        mInput.value += emoji;
+        mInput.focus();
+    })
+    emojiBtn.addEventListener('click', function(){
+        picker.pickerVisible ? picker.hidePicker() : picker.showPicker(emojiBtn);
+    })
+
+
+    ws.onmessage = function(event) {
+
+        // console.log(event);
+        console.log('Message is recieved');
+
+        var date = new Date().toLocaleDateString("en-GB");
+        var time = new Date().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+
+
+        var data = JSON.parse(event.data);
+        const ul = document.getElementById('message-feed');
+        var li = document.createElement('li');
+        if (data.text){
+          li.innerHTML += '[' + date + " " + time + ' <b>@' + data.username + '</b>]: ' + data.text;
+          ul.append(li);
+        }
+
+        scrollToBottom();
+    };
+
+    ws.onclose = function(event) {
+        console.log('Connection is closed');
+    };
+
+    ws.onerror = function(e) {
+        console.log('Something wrong');
+    };
+
+    const messageForm = document.getElementById('message-form')
+    messageForm.addEventListener('submit', sendMessage)
+    function sendMessage(e) {
+        if (e.preventDefault) e.preventDefault();
+        ws.send(document.getElementById('message').value);
+        messageForm.reset()
+        return false;
+    };
+</script>
+{% endblock script %}
+
+
+<!-- const div = document.querySelector('#message-list').innerHTML
+        var li = document.createElement('li')
+        var data = JSON.parse(event.data);
+        li.append(document.createTextNode(
+            '[' + data.username + ']: ' + data.text
+        ))
+        ul.append(li); -->

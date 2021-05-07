@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+    <h1 class="h3 mb-0 text-gray-800">Детали</h1>
+    </div>          
+
+    <div class="row ">
+      <div class="card mx-auto o-hidden border-0 shadow-lg col-lg-6 p-5">
+        <div class="card-body">
+            <h2>{{ company.name }}</h2>
+
+            <p><strong>Адрес: </strong> {{ company.address }} </p>
+
+            {% if company.description %}
+            <p><strong>Описание: </strong><br> {{ company.description }} </p>
+            {% else %}
+            <p><strong>Описание отсутствует</strong></p>
+            {% endif %}
+            <a href="{% url 'teams:company-update' company.slug %}" class="btn  btn-block btn-info shadow-sm">Изменить</a>
+            <a href="{% url 'teams:contact-sms' company.slug %}" title="Рассылка сообщений всем контактам находящимся в данной компании" class="btn  btn-block btn-success shadow-sm">Рассылка SMS</a>
+            <a href="{% url 'teams:contact-email-all' company.slug %}" title="Рассылка email всем контактам находящимся в данной компании" class="btn  btn-block btn-success shadow-sm">Рассылка Email</a>
+            <a href="{% url 'teams:company-inventory' company.slug %}" class="btn  btn-block btn-secondary shadow-sm">Рабочие места</a>
+            <a href="{% url 'teams:company-delete' company.slug %}" class="btn  btn-block btn-danger shadow-sm">Удалить</a>
+            <hr>
+                    <div class="text-center">
+                      <a class="small" href="{% url 'teams:company-list' %}">Назад</a>
+                    </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
