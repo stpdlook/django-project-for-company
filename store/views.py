@@ -1,5 +1,4 @@
 import xlwt
-from xhtml2pdf import pisa
 
 from django.http import HttpResponse
 
