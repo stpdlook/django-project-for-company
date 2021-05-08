@@ -1,4 +1,6 @@
 wheel
+uvloop==0.15.2
+httptools==0.2.0
 aioredis==1.3.1
 arrow==1.0.3
 asgiref==3.3.4
