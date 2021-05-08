@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'CRMPlus.asgi.application'
+ASGI_APPLICATION = 'CRMPlus.routing.application'
 WSGI_APPLICATION = 'CRMPlus.wsgi.application'
 
 CHANNEL_LAYERS = {
