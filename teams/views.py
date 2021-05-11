@@ -223,7 +223,7 @@ class ContactListView(EmployeeStaffRequiredMixin, generic.ListView):
     def get_queryset(self):
         user = self.request.user
         if user.employee.is_personal:
-            queryset = Contact.objects.all()
+            queryset = Contact.objects.all().select_related('created_by', 'company')
         return queryset
 
 
@@ -249,7 +249,7 @@ class ContactUpdateView(EmployeeStaffRequiredMixin, generic.UpdateView):
     def get_queryset(self):
         user = self.request.user
         if user.employee.is_personal:
-            queryset = Contact.objects.all()
+            queryset = Contact.objects.all().select_related('company')
         return queryset
 
     def get_success_url(self):
@@ -364,7 +364,7 @@ class EmployeeListView(EmployeeRequiredMixin, generic.ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            queryset = Employee.objects.all()
+            queryset = Employee.objects.all().select_related('user')
         return queryset
 
 

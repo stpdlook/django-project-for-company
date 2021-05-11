@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 from .views import (
     CompanyListView,
     CompanyCreateView,
@@ -35,23 +36,23 @@ app_name = "teams"
 urlpatterns = [
     ################################
     path('company', CompanyListView.as_view(), name='company-list'),
-    path('company/create/', CompanyCreateView.as_view(), name='company-create'),
+    path('company/create/', cache_page(60*10)(CompanyCreateView.as_view()), name='company-create'),
     path('company/detail/<slug:slug>/', CompanyDetailView.as_view(), name='company-detail'),
 
     path('company/detail/<slug:slug>/inventory/', InventoryCompanyView.as_view(), name='company-inventory'),
     path('company/detail/<slug:slug>/inventory/report=xls', export_inventory_xls, name='company-inventory-xls'),
-    path('company/detail/<slug:slug>/<int:pk>/inventory/create/', InventoryCreate.as_view(), name='company-inventory-create'),
+    path('company/detail/<slug:slug>/<int:pk>/inventory/create/', cache_page(60*10)(InventoryCreate.as_view()), name='company-inventory-create'),
     path('company/detail/<slug:slug>/inventory/detail/<int:pk>', InventoryCompanyUpdateView.as_view(), name='company-inventory-detail'),
     path('company/delete/<slug:company_slug>/<int:pk_id>', inventory_company_delete, name='company-inventory-delete'),
     path('company/sendsms/<slug:slug>', SendSMSView.as_view(), name='contact-sms'),
     path('company/sendemail/<slug:slug>', EmployeeEmailCompanyView.as_view(), name='contact-email-all'),
 
-    path('company/update/<slug:slug>/', CompanyUpdateView.as_view(), name='company-update'),
+    path('company/update/<slug:slug>/', (CompanyUpdateView.as_view()), name='company-update'),
     path('company/delete/<slug:company_slug>', company_delete, name='company-delete'),
     ################################
     path('contact/', ContactListView.as_view(), name='contact-list'),
     path('contact/search/', SearchContact.as_view(), name='contact-search'),
-    path('contact/create/', ContactCreateView.as_view(), name='contact-create'),
+    path('contact/create/', cache_page(60*10)(ContactCreateView.as_view()), name='contact-create'),
     path('contact/sendsms/contact=<int:pk>', SendSMSContactView.as_view(), name='contact-sendsms'),
     path('contact/send/contact=<int:pk>', ContactEmailView.as_view(), name='contact-email'),
     path('contact/update/contact=<int:pk>', ContactUpdateView.as_view(),name='contact-update'),

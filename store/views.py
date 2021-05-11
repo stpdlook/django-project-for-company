@@ -29,7 +29,7 @@ class ProductListView(EmployeeStaffRequiredMixin, generic.ListView):
     def get_queryset(self):
         user = self.request.user
         if user.employee.is_personal:
-            queryset = Product.objects.all()
+            queryset = Product.objects.all().select_related('type_product', 'created_by')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -61,7 +61,7 @@ class ProductByCategory(EmployeeStaffRequiredMixin, generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        return Product.objects.filter(type_product=self.request.GET.get('type_product'))
+        return Product.objects.filter(type_product=self.request.GET.get('type_product')).select_related('type_product', 'created_by')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

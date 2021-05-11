@@ -39,8 +39,7 @@ class DialogView(EmployeeStaffRequiredMixin, View):
     
     def get_context_data(self):
         context = {}
-        context['me'] = self.request.user
-        context['persons'] = get_user_model().objects.all()
+        context['persons'] = get_user_model().objects.all().select_related('employee')
         return context
 
     def get(self, request):
@@ -67,11 +66,10 @@ class ThreadView(EmployeeStaffRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         context = {}
-        context['me'] = self.request.user
         context['thread'] = self.get_object()
         context['recipient'] = self.other_user
-        context['persons'] = get_user_model().objects.all()
-        context['message'] = self.get_object().message_set.all()
+        context['persons'] = get_user_model().objects.all().select_related('employee')
+        context['message'] = self.get_object().message_set.all().select_related('sender', 'thread')
         return context
 
     def get(self, request, **kwargs):
@@ -97,5 +95,3 @@ class ThreadView(EmployeeStaffRequiredMixin, View):
         Message.objects.create(sender=user, thread=thread, text=text)
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context=context)
-
-# Парсер новостей

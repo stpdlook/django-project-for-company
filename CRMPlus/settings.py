@@ -29,6 +29,10 @@ INSTALLED_APPS = [
     'django_cleanup',
     'smsru',
 
+        ###
+    'debug_toolbar',
+        ###
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'CRMPlus.urls'
@@ -84,6 +89,12 @@ CHANNEL_LAYERS = {
         }
     }
 }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#     }
+# }
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -139,7 +150,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "CRMPlus/static"
 ]
-STATIC_ROOT = "static_root"
+STATIC_ROOT = "static_root/static"
 
 
 MEDIA_ROOT = 'media'
@@ -189,3 +200,16 @@ if not DEBUG:
     EMAIL_USE_TLS = True
     EMAIL_PORT = env('EMAIL_PORT')
     DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+    '0.0.0.0',
+]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / "cached_data",
+    }
+}
